@@ -1,0 +1,29 @@
+actor: ApiTester
+modules:
+    enabled:
+        - REST:
+            url: &url http://localhost:8000/api/
+            depends: PhpBrowser
+        - Doctrine2:
+            depends: Symfony
+            cleanup: false
+        - DataFactory:
+            depends: Doctrine2
+            cleanup: false
+        - \Helper\Factories
+        - \Helper\Api
+        - Asserts
+        - Phiremock:
+              host: localhost
+              port: 8002
+              reset_before_each_test: false # if set to true, executes `$I->haveACleanSetupInRemoteService` before each test. Defaults to false
+              secure: false
+              extra_connections: [ ] # Default: empty array
+    config:
+        PhpBrowser:
+            url: *url
+            headers:
+                Accept: application/json
+        Symfony:
+            app_path: 'src'
+            environment: 'dev'

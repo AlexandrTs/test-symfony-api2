@@ -1,0 +1,56 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    customers_provider.class: 'App\Provider\CustomersRandomUserApiProvider'
+    customers_provider.base_url: 'https://randomuser.me/api/'
+    customers_provider.params:
+        inc: 'id,name,location,login,gender,phone,email'
+        noinfo: ''
+        format: 'json'
+    customers_denormalizer.class: 'App\Serializer\CustomersFromRandomUserDenormalizer'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    customers_provider:
+        class: '%customers_provider.class%'
+
+    customers_denormalizer:
+        class: '%customers_denormalizer.class%'
+        tags: ['serializer.denormalizer']
+
+    customers_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+        arguments:
+            - App\Entity\Customers
+
+    App\Service\CustomersImporter:
+        arguments:
+            - '@customers_provider'
+            - '@customers_denormalizer'
+            - '@customers_repository'
+            - '%customers_provider.params%'
+        calls:
+            - setBaseUrl: ['%customers_provider.base_url%']
+        public: true # only if you run tests from dev environment. In test env it's not required
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+            - '../src/Service/CustomersImporter.php'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
