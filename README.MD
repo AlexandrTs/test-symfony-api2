@@ -39,7 +39,8 @@ make php COMMAND="./bin/console app:import-customers"
 ```
 
 100 customers will be imported from RandomUser API.
-You can run this command as many times as you need.
+You can run this command as many times as you need. 
+Sometimes API return duplicates.
 
 #### In another terminal run php web server
 ```
