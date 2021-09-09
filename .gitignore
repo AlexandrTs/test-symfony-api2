@@ -18,4 +18,5 @@
 .subversion
 cache
 tests/_output
+.idea
 
