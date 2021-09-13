@@ -18,7 +18,6 @@ composer:
 # make php COMMAND="./vendor/bin/codecept run --step"
 # make php COMMAND="./bin/console make:entity"
 php:
-	#docker pull php:8.0.5-alpine
 	docker build -q ./docker/php -t symfonyapi
 	docker run --rm \
 	--network host \
