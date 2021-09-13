@@ -68,6 +68,11 @@ Will start at localhost:8002
 make php COMMAND="./vendor/bin/codecept run --steps"
 ```
 
+Run only unit tests
+
+```
+make php COMMAND="./vendor/bin/codecept run unit"
+```
 
 
 
