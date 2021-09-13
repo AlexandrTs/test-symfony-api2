@@ -50,22 +50,6 @@ server:
 	symfonyapi \
 	php -S localhost:8000 -t public
 
-server-test:
-	docker build -q ./docker/php -t symfonyapi
-	docker run --rm \
-	--network host \
-	--volume $(CURDIR):${HOME} \
-	--volume ${HOME}/.ssh:${HOME}/.ssh:ro \
-	--volume /etc/passwd:/etc/passwd:ro \
-	--volume /etc/group:/etc/group:ro \
-	--user ${shell id -u}:$(shell id -g) \
-	--env HOME=${HOME} \
-	--env COMPOSER_HOME=${HOME} \
-	--workdir ${HOME}  \
-	--interactive \
-	symfonyapi \
-	php -S localhost:8001 -t public
-
 server-phiremock:
 	docker build -q ./docker/php -t symfonyapi
 	docker run --rm \
